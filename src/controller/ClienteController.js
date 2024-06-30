@@ -110,10 +110,33 @@ class ClienteController {
       response.status(500).json({ mensagem: "Houve um erro ao deletar" });
     }
   }
+
+  async update(request, response) {
+    try {
+      const dados = request.body;
+      const id = request.params.id;
+
+      const cadastroAtualizado = await conexao.query(
+        `
+            UPDATE clientes SET
+            email = $1
+            where id = $2
+            returning  *
+            `,
+        [dados.email, id]
+      );
+
+      response.json(cadastroAtualizado.rows[0]);
+    } catch (error) {
+      response
+        .status(500)
+        .json({ mensagem: "Houve um erro ao atualizar o cadastro" });
+    }
+  }
 }
 
-// body = rotas de atualizar e cadastrar
-// query params = rotas get (listar um ou todos os dados
-// rout params = listar um dado ou atualizar
+// request.body = rotas de atualizar e cadastrar
+// query request.params = rotas get (listar um ou todos os dados
+// rout request.params = listar um dado ou atualizar
 
 module.exports = new ClienteController();
