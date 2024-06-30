@@ -111,28 +111,28 @@ class ClienteController {
     }
   }
 
-  async update(request, response) {
-    try {
-      const dados = request.body;
-      const id = request.params.id;
+  //   async update(request, response) {
+  //     try {
+  //       const dados = request.body;
+  //       const id = request.params.id;
 
-      const cadastroAtualizado = await conexao.query(
-        `
-            UPDATE clientes SET
-            email = $1
-            where id = $2
-            returning  *
-            `,
-        [dados.email, id]
-      );
+  //       const cadastroAtualizado = await conexao.query(
+  //         `
+  //             UPDATE clientes SET
+  //             email = $1
+  //             where id = $2
+  //             returning  *
+  //             `,
+  //         [dados.email, id]
+  //       );
 
-      response.json(cadastroAtualizado.rows[0]);
-    } catch (error) {
-      response
-        .status(500)
-        .json({ mensagem: "Houve um erro ao atualizar o cadastro" });
-    }
-  }
+  //       response.json(cadastroAtualizado.rows[0]);
+  //     } catch (error) {
+  //       response
+  //         .status(500)
+  //         .json({ mensagem: "Houve um erro ao atualizar o cadastro" });
+  //     }
+  //   }
 }
 
 // request.body = rotas de atualizar e cadastrar
