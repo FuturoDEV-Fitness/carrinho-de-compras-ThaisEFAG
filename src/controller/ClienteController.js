@@ -62,6 +62,58 @@ class ClienteController {
         .json({ mensagem: "Não foi possível realizar o cadastro" });
     }
   }
+
+  async pesquisaId(request, response) {
+    try {
+      const id = request.params.id;
+
+      const clientes = await conexao.query(
+        `
+        SELECT * FROM clientes
+        where id = $1
+        `,
+        [id]
+      );
+
+      if (clientes.rows.length === 0) {
+        // rows é um array composto pelos retornos
+        return response.status(404).json({ mensagem: "ID não encontrado" });
+      }
+
+      response.json(clientes.rows[0]);
+      //   biblioteca trata os retornos como array: id (unico sempre), sempre terá somente o indice zero nas querys com id
+    } catch (error) {
+      response.status(500).json({ mensagem: "Não foi possível encontrar" });
+    }
+  }
+
+  async deleteID(request, response) {
+    try {
+      const id = request.params.id;
+
+      const rowCount = await conexao.query(
+        `
+                DELETE FROM clientes
+                where id = $1
+                `,
+        [id]
+      );
+
+      if (rowCount === 0) {
+        return response
+          .status(404)
+          .json({ mensagem: "Não foi encontrado um registro com esse id" });
+      }
+
+      response.staus(204).json({ mensagem: "Cadastro deletado!" });
+    } catch (error) {
+      response.status(500).json({ mensagem: "Houve um erro ao deletar" });
+    }
+  }
 }
+
+// body = rotas de atualizar e cadastrar
+// query params = rotas get (listar um ou todos os dados
+// rout params = listar um dado ou atualizar
 
 module.exports = new ClienteController();
