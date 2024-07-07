@@ -9,6 +9,6 @@ clientesRoute.post("/", ClienteController.criar);
 clientesRoute.get("/", ClienteController.pesquisarCadastros);
 clientesRoute.get("/:id", ClienteController.pesquisaId);
 clientesRoute.delete("/:id", ClienteController.deleteID);
-clientesRoute.put("/:id", ClienteController.update);
+// clientesRoute.put("/:id", ClienteController.update);
 
 module.exports = clientesRoute;
