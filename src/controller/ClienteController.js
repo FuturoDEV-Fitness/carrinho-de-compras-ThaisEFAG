@@ -27,7 +27,7 @@ class ClienteController {
     } else {
       const clientes = await conexao.query(`
                 SELECT * FROM clientes
-                 `);
+       `);
       response.json(clientes.rows);
     }
   }

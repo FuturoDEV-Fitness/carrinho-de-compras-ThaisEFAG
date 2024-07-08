@@ -13,19 +13,54 @@ class ProductController {
     const filtroProduct = request.query;
 
     if (filtroProduct.filtroParams) {
-      const produtos = await conexao.query(
+      const products = await conexao.query(
         `
             SELECT * FROM products
             where name ilike $1
-            or color ilike $
-            `
+            or color ilike $1
+            or description ilike $1
+            or voltage ilike $1
+            `,
+        [`%${filtroProduct.filtroParams}%`]
       );
+      response.json(products.rows);
+    } else {
+      const products = await conexao.query(`
+          SELECT * FROM products
+      `);
+      response.json(products.rows);
+    }
+  }
+
+  async pesquisarId(request, response) {
+    try {
+      const id = request.params.id;
+
+      const products = conexao.query(
+        `
+      SELECT * FROM products
+      where id = $1
+      `,
+        [id]
+      );
+
+      if (products.rows.length === 0) {
+        return response.status(404).json({
+          mensagem: "ID Produto não encontrado",
+        });
+      }
+
+      response.json(products.rows[0]);
+    } catch (error) {
+      response
+        .status(500)
+        .json({ mensagem: "Não foi possível encontrar(server" });
     }
   }
 
   async productRegister(request, response) {
     try {
-      const dados = request.body;
+      const dados = await request.body;
 
       if (!dados.name || !dados.price) {
         return response.status(400).json({
