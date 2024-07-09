@@ -9,6 +9,29 @@ const conexao = new Pool({
 });
 
 class ProductController {
+  async produtosDetalhes(request, response) {
+    try {
+      const id = request.params.id;
+
+      const detalhes = conexao.query(`
+      SELECT p.id, p.name 
+      FROM products p 
+      INNER JOIN categories c 
+      ON p.category_id = c.id
+      `);
+      response.json(detalhes.rows);
+
+      if (isNaN(id)) {
+        return response.status(404).json({
+          mensagem: "ID Produto não encontrado",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      response.status(500).json({ mensagem: "Erro server" });
+    }
+  }
+
   async pesquisarProduto(request, response) {
     const filtroProduct = request.query;
 
